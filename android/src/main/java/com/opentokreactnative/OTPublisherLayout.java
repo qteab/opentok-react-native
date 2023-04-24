@@ -43,7 +43,7 @@ public class OTPublisherLayout extends FrameLayout{
                 }
             }
             if (mPublisher.getView().getParent() != null) {
-                ((ViewGroup)mPublisher.getView().getParent()).removeAllViews()
+                ((ViewGroup)mPublisher.getView().getParent()).removeAllViews();
             }
             mPublisher.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
                     BaseVideoRenderer.STYLE_VIDEO_FILL);
