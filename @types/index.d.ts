@@ -1,4 +1,4 @@
-declare module "@qteab/opentok-react-native" {
+declare module "opentok-react-native" {
   import React from "react";
   import { ViewProps } from "react-native";
 
