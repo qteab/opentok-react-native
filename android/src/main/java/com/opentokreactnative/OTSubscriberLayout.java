@@ -48,7 +48,7 @@ public class OTSubscriberLayout extends FrameLayout{
                 }
             }
             if (mSubscriber.getView().getParent() != null) {
-                ((ViewGroup)mSubscriber.getView().getParent()).removeView(mSubscriber.getView());
+                ((ViewGroup)mSubscriber.getView().getParent()).removeAllViews()
             }
             mSubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
                 BaseVideoRenderer.STYLE_VIDEO_FILL);

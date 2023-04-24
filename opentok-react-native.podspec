@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platform      = :ios, "12.0"
   s.swift_version = "4.2"
 
-  s.source        = { :git => "https://github.com/opentok/opentok-react-native.git", :tag => "v#{s.version}" }
+  s.source        = { :git => "https://github.com/qteab/opentok-react-native.git", :tag => "v#{s.version}" }
   s.source_files  = "ios/**/*.{h,m,swift}"
 
   s.dependency 'React'
