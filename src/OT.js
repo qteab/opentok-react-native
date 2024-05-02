@@ -4,15 +4,18 @@ import { each } from 'underscore';
 const OT = NativeModules.OTSessionManager;
 const nativeEvents = new NativeEventEmitter(OT);
 
-const checkAndroidPermissions = () => new Promise((resolve, reject) => {
-  PermissionsAndroid.requestMultiple([
-    PermissionsAndroid.PERMISSIONS.CAMERA,
-    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO])
+const checkAndroidPermissions = (audioTrack, videoTrack, isScreenSharing) => new Promise((resolve, reject) => {
+  const permissionsToCheck = [
+    ... audioTrack ? [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] : [],
+    ... (videoTrack && !isScreenSharing) ? [PermissionsAndroid.PERMISSIONS.CAMERA] : [],
+  ];
+  PermissionsAndroid.requestMultiple(permissionsToCheck)
     .then((result) => {
       const permissionsError = {};
       permissionsError.permissionsDenied = [];
       each(result, (permissionValue, permissionType) => {
-        if (permissionValue === 'denied') {
+        // Check if the permission is denied or set to 'never_ask_again'.
+        if (permissionValue === 'denied' || permissionValue === 'never_ask_again' ) {
           permissionsError.permissionsDenied.push(permissionType);
           permissionsError.type = 'Permissions error';
         }

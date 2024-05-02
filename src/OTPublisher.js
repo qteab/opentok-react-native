@@ -78,6 +78,7 @@ class OTPublisher extends Component {
 
     updatePublisherProperty('publishAudio', true);
     updatePublisherProperty('publishVideo', true);
+    updatePublisherProperty('publishCaptions', false);
     updatePublisherProperty('cameraPosition', 'front');
     updatePublisherProperty('videoContentHint', '');
   }
@@ -98,20 +99,22 @@ class OTPublisher extends Component {
     }
   };
   createPublisher() {
+    const publisherProperties = sanitizeProperties(this.props.properties);
     if (Platform.OS === 'android') {
-      checkAndroidPermissions()
+      const { audioTrack, videoTrack, videoSource } = publisherProperties;
+      const isScreenSharing = (videoSource === 'screen');
+      checkAndroidPermissions(audioTrack, videoTrack, isScreenSharing)
         .then(() => {
-          this.initPublisher();
+          this.initPublisher(publisherProperties);
         })
         .catch((error) => {
           this.otrnEventHandler(error);
         });
     } else {
-      this.initPublisher();
+      this.initPublisher(publisherProperties);
     }
   }
-  initPublisher() {
-    const publisherProperties = sanitizeProperties(this.props.properties);
+  initPublisher(publisherProperties) {
     OT.initPublisher(
       this.state.publisherId,
       publisherProperties,
@@ -152,6 +155,14 @@ class OTPublisher extends Component {
       }
     );
   }
+  getRtcStatsReport() {
+    OT.getRtcStatsReport(this.state.publisherId);
+  }
+
+  setVideoTransformers(videoTransformers) {
+    OT.setVideoTransformers(this.state.publisherId, videoTransformers);
+  }
+
   render() {
     const { publisher, publisherId } = this.state;
     const { sessionId } = this.context;
@@ -172,10 +183,13 @@ OTPublisher.propTypes = {
   ...viewPropTypes,
   properties: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   eventHandlers: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  getRtcStatsReport: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  setVideoTransformers: PropTypes.func, // eslint-disable-line react/forbid-prop-types
 };
 OTPublisher.defaultProps = {
   properties: {},
   eventHandlers: {},
+  getRtcStatsReport: {},
 };
 OTPublisher.contextType = OTContext;
 export default OTPublisher;
